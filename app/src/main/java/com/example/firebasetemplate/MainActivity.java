@@ -1,15 +1,16 @@
 package com.example.firebasetemplate;
 
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.os.Bundle;
-import android.view.View;
-
 import com.example.firebasetemplate.databinding.ActivityMainBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     private NavController navController;
@@ -44,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
                 binding.bottomNavView.setVisibility(View.VISIBLE);
             }
         });
+
+        class Post{
+            public String title;
+            public String message;
+            Post(String t, String m){title = t; message = m;}
+        }
+        FirebaseFirestore.getInstance().collection("posts").add(new Post("Hello", "hello word"));
+
     }
 
     @Override
