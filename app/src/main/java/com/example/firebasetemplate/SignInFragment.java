@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -45,6 +46,24 @@ public class SignInFragment extends AppFragment {
 
         binding.googleSignIn.setOnClickListener(view1 -> {
             signInClient.launch(googleSignInClient.getSignInIntent());
+        });
+
+        binding.goToRegister.setOnClickListener(V -> {
+            navController.navigate(R.id.action_signInFragment_to_registerFragment);
+        });
+        binding.emailSignIn.setOnClickListener(V -> {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                    binding.email.getText().toString(),
+                    binding.password.getText().toString()
+            ).addOnCompleteListener(task ->{
+                if (task.isSuccessful()) {
+                    navController.navigate(R.id.action_signInFragment_to_postsHomeFragment);
+                }else{
+                    Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
         });
     }
 
