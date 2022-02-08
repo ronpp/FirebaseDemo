@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.example.firebasetemplate.databinding.FragmentNewPostBinding;
 import com.example.firebasetemplate.model.Post;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDate;
 
@@ -37,11 +36,17 @@ public class NewPostFragment extends AppFragment {
             Glide.with(this).load(uri).into(binding.previsualizacion);
         });
         binding.publicar.setOnClickListener(v ->{
+            binding.publicar.setEnabled(false);
             Post post = new Post();
             post.content = binding.contenido.getText().toString();
             post.authorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
             post.date = LocalDate.now().toString();
-            FirebaseFirestore.getInstance().collection("posts").add(post);
+            db.collection("posts")
+                    .add(post)
+                    .addOnCompleteListener(task ->{
+                        binding.publicar.setEnabled(true);
+                        navController.popBackStack();
+                    });
         });
     }
 
