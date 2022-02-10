@@ -9,10 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.firebasetemplate.databinding.FragmentPostsBinding;
 import com.example.firebasetemplate.databinding.ViewholderPostBinding;
 import com.example.firebasetemplate.model.Post;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +38,18 @@ public class PostsHomeFragment extends AppFragment {
         binding.postsRecyclerView.setAdapter(adapter = new PostsAdapter());
 
         //Consultar post
-        db.collection("posts").addSnapshotListener((collectionSnapshot, e) ->{
+        setQuery().addSnapshotListener((collectionSnapshot, e) ->{
+            postsList.clear();
             for (DocumentSnapshot documentSnapshot: collectionSnapshot ) {
                 postsList.add(documentSnapshot.toObject(Post.class));
             }
             adapter.notifyDataSetChanged();
         });
+
+    }
+
+    Query setQuery(){
+        return db.collection("posts");
 
     }
     class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
@@ -55,6 +63,9 @@ public class PostsHomeFragment extends AppFragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.binding.contenido.setText(postsList.get(position).content);
             holder.binding.autor.setText(postsList.get(position).authorName);
+            Glide.with(requireContext())
+                    .load(postsList.get(position).imageUrl)
+                    .into(holder.binding.imagen);
         }
 
         @Override
