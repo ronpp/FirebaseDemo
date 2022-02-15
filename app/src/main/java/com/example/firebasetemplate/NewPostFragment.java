@@ -37,8 +37,11 @@ public class NewPostFragment extends AppFragment {
         binding.previsualizacion.setOnClickListener(v -> galeria.launch("image/*"));
 
         appViewModel.uriImagenSeleccionada.observe(getViewLifecycleOwner(), uri -> {
-            Glide.with(this).load(uri).into(binding.previsualizacion);
-            uriImage = uri;
+            if (uri != null) {
+                Glide.with(this).load(uri).into(binding.previsualizacion);
+                uriImage = uri;
+            }
+
         });
         binding.publicar.setOnClickListener(v ->{
             binding.publicar.setEnabled(false);
@@ -59,6 +62,7 @@ public class NewPostFragment extends AppFragment {
                         db.collection("posts")
                                 .add(post)
                                 .addOnCompleteListener(task ->{
+                                    appViewModel.setUriImagenSeleccionada(null);
                                     binding.publicar.setEnabled(true);
                                     navController.popBackStack();
                                 });
