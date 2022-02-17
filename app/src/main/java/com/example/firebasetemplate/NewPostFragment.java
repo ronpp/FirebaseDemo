@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -59,6 +57,7 @@ public class NewPostFragment extends AppFragment {
                         post.authorName = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                         post.date = LocalDate.now().toString();
                         post.imageUrl = urlDescarga.toString();
+                        post.authorName = auth.getCurrentUser().getPhotoUrl().toString();
                         db.collection("posts")
                                 .add(post)
                                 .addOnCompleteListener(task ->{
@@ -72,7 +71,4 @@ public class NewPostFragment extends AppFragment {
     }
 
 
-    private final ActivityResultLauncher<String> galeria = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        appViewModel.setUriImagenSeleccionada(uri);
-    });
 }

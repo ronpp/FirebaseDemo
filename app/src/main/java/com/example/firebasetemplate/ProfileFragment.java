@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.example.firebasetemplate.databinding.FragmentProfileBinding;
-import com.google.firebase.auth.FirebaseAuth;
 
 
 public class ProfileFragment extends AppFragment {
@@ -23,7 +23,10 @@ public class ProfileFragment extends AppFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FirebaseA
+        binding.txtUserEmail.setText((auth.getCurrentUser().getEmail()));
+        binding.txtUsername.setText((auth.getCurrentUser().getDisplayName()));
+        Glide.with(requireContext()).load(auth.getCurrentUser().getPhotoUrl()).into(binding.profileImg);
+
 
     }
 }
