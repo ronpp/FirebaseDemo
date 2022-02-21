@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         });
         FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
             if (firebaseAuth.getCurrentUser() != null) {
+                System.out.println("AAAA:" +FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
                 Glide.with(this).load(firebaseAuth.getCurrentUser().getPhotoUrl()).circleCrop().into(navHeaderMainBinding.imgPhoto);
                 navHeaderMainBinding.drawerName.setText(firebaseAuth.getCurrentUser().getDisplayName());
                 navHeaderMainBinding.drawerEmail.setText(firebaseAuth.getCurrentUser().getEmail());

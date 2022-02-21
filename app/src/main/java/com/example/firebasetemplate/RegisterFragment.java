@@ -16,6 +16,9 @@ import com.example.firebasetemplate.databinding.FragmentRegisterBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.UUID;
 
 
 public class RegisterFragment extends AppFragment {
@@ -51,30 +54,42 @@ public class RegisterFragment extends AppFragment {
                 return;
             }
 
-            FirebaseAuth.getInstance()
-                    .createUserWithEmailAndPassword(
-                            binding.emailEditText.getText().toString(),
-                            binding.passwordEditText.getText().toString()
-                    ).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(binding.userEditText.getText().toString())
-                                    .setPhotoUri(uriImage)
-                                    .build();
-                            user.updateProfile(profileUpdates);
+            // Subir la imagen antes del post para luego obtener su URl y guardarla
+            FirebaseStorage.getInstance()
+                    .getReference("/images/" + UUID.randomUUID()+".jpg")
+                    .putFile(uriImage)
+                    .continueWithTask(task ->
+                            task.getResult().getStorage().getDownloadUrl())
+                    .addOnSuccessListener(urlDescarga ->{
 
-                            navController.navigate(R.id.action_registerFragment_to_postHomeFragment);
+                        FirebaseAuth.getInstance()
+                                .createUserWithEmailAndPassword(
+                                        binding.emailEditText.getText().toString(),
+                                        binding.passwordEditText.getText().toString()
+                                ).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(binding.userEditText.getText().toString())
+                                        .setPhotoUri(urlDescarga)
+                                        .build();
+                                user.updateProfile(profileUpdates);
 
-                        }else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("FAIL", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
-                                Toast.LENGTH_SHORT).show();
+                                navController.navigate(R.id.action_registerFragment_to_postHomeFragment);
 
-                        }
+                            }else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("FAIL", "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(requireContext(), task.getException().getLocalizedMessage(),
+                                        Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        });
 
                     });
+
+
         });
     }
 }

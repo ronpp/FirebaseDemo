@@ -54,10 +54,10 @@ public class NewPostFragment extends AppFragment {
 
                         Post post = new Post();
                         post.content = binding.contenido.getText().toString();
-                        post.authorName = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                        post.authorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                         post.date = LocalDate.now().toString();
                         post.imageUrl = urlDescarga.toString();
-                        post.authorName = auth.getCurrentUser().getPhotoUrl().toString();
+                        post.authorPhoto = auth.getCurrentUser().getPhotoUrl().toString();
                         db.collection("posts")
                                 .add(post)
                                 .addOnCompleteListener(task ->{
