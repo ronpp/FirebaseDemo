@@ -21,7 +21,9 @@
         android:id="@+id/profileFragment"
         android:name="com.example.firebasetemplate.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+
+    </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.firebasetemplate.RegisterFragment"
@@ -75,4 +77,18 @@
 
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/profileUpdateFragment"
+        android:name="com.example.firebasetemplate.ProfileUpdateFragment"
+        android:label="fragment_profile_update"
+        tools:layout="@layout/fragment_profile_update">
+        <argument
+            android:name="userid"
+            app:argType="string"
+            android:defaultValue=""/>
+    </fragment>
+
+    <action
+        android:id="@+id/action_profileFragment_to_profileUpdateFragment"
+        app:destination="@id/profileUpdateFragment" />
 </navigation>
