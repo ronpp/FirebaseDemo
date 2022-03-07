@@ -1,5 +1,6 @@
 package com.example.firebasetemplate;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,67 +8,52 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileUpdateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ProfileUpdateFragment extends Fragment {
+import com.bumptech.glide.Glide;
+import com.example.firebasetemplate.databinding.FragmentProfileUpdateBinding;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class ProfileUpdateFragment extends AppFragment {
 
-    public ProfileUpdateFragment() {
-        // Required empty public constructor
-    }
+    private FragmentProfileUpdateBinding binding;
+    private Uri uriImage;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileUpdateFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileUpdateFragment newInstance(String param1, String param2) {
-        ProfileUpdateFragment fragment = new ProfileUpdateFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_update, container, false);
+        return (binding = FragmentProfileUpdateBinding.inflate(inflater, container, false)).getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.editUsername.setText(auth.getCurrentUser().getDisplayName());
+        binding.txtEmail.setText(auth.getCurrentUser().getEmail());
+        Glide.with(requireContext()).load(auth.getCurrentUser().getPhotoUrl()).into(binding.updateProfileImg);
 
-        String userid = ProfileUpdateFragmentArgs.fromBundle(getArguments()).getUserid();
+        binding.updateProfileImg.setOnClickListener(v -> galeria.launch("image/*"));
+        // Open Gallery
+        appViewModel.uriImagenSeleccionada.observe(getViewLifecycleOwner(), uri -> {
+            if (uri != null) {
+                Glide.with(this).load(uri).into(binding.updateProfileImg);
+                uriImage = uri;
+            }
+        });
+
+        binding.btnUpateProfSave.setOnClickListener(v ->{
+            FirebaseUser user = auth.getCurrentUser();
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(binding.editUsername.getText().toString())
+                    .setPhotoUri(uriImage)
+                    .build();
+            user.updateProfile(profileUpdates);
+
+            navController.popBackStack();
+        });
+       // String userid = ProfileUpdateFragmentArgs.fromBundle(getArguments()).getUserid();
 
 
     }

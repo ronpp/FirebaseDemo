@@ -23,6 +23,10 @@
         android:label="Profile"
         tools:layout="@layout/fragment_profile" >
 
+        <action
+            android:id="@+id/action_profileFragment_to_profileUpdateFragment"
+            app:destination="@id/profileUpdateFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -88,7 +92,5 @@
             android:defaultValue=""/>
     </fragment>
 
-    <action
-        android:id="@+id/action_profileFragment_to_profileUpdateFragment"
-        app:destination="@id/profileUpdateFragment" />
+
 </navigation>

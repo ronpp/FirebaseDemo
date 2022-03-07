@@ -27,8 +27,15 @@ public class ProfileFragment extends AppFragment {
         binding.txtUsername.setText((auth.getCurrentUser().getDisplayName()));
         Glide.with(requireContext()).load(auth.getCurrentUser().getPhotoUrl()).into(binding.profileImg);
 
-        NavGraphDirections.ActionProfileFragmentToProfileUpdateFragment action = NavGraphDirections.actionProfileFragmentToProfileUpdateFragment();
-        action.setUserid("ldsfklsdfj");
-        navController.navigate(action);
+
+//        NavGraphDirections.ActionProfileFragmentToProfileUpdateFragment action = NavGraphDirections.actionProfileFragmentToProfileUpdateFragment();
+//        action.setUserid("userId");
+//        navController.navigate(action);
+
+        binding.btnUpdateProfile.setOnClickListener(v ->{
+        navController.navigate(R.id.action_profileFragment_to_profileUpdateFragment);
+        navController.popBackStack();
+        });
+
     }
 }
