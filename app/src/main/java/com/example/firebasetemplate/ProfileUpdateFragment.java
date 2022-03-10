@@ -13,6 +13,9 @@ import com.bumptech.glide.Glide;
 import com.example.firebasetemplate.databinding.FragmentProfileUpdateBinding;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.UUID;
 
 
 public class ProfileUpdateFragment extends AppFragment {
@@ -42,15 +45,27 @@ public class ProfileUpdateFragment extends AppFragment {
                 uriImage = uri;
             }
         });
-
+        FirebaseUser user = auth.getCurrentUser();
         binding.btnUpateProfSave.setOnClickListener(v ->{
-            FirebaseUser user = auth.getCurrentUser();
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(binding.editUsername.getText().toString())
-                    .setPhotoUri(uriImage)
-                    .build();
-            user.updateProfile(profileUpdates);
-
+           if(!binding.editUsername.getText().toString().isEmpty()){
+               UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                       .setDisplayName(binding.editUsername.getText().toString())
+                       .build();
+               user.updateProfile(profileUpdates);
+           }
+           if (uriImage != null){
+               FirebaseStorage.getInstance()
+                       .getReference("/images/" + UUID.randomUUID()+".jpg")
+                       .putFile(uriImage)
+                       .continueWithTask(task ->
+                               task.getResult().getStorage().getDownloadUrl())
+                       .addOnSuccessListener(urlDescarga ->{
+                           UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                   .setPhotoUri(urlDescarga)
+                                   .build();
+                           user.updateProfile(profileUpdates);
+                       });
+           }
             navController.popBackStack();
         });
        // String userid = ProfileUpdateFragmentArgs.fromBundle(getArguments()).getUserid();

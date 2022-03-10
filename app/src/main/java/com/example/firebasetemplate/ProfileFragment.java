@@ -34,7 +34,7 @@ public class ProfileFragment extends AppFragment {
 
         binding.btnUpdateProfile.setOnClickListener(v ->{
         navController.navigate(R.id.action_profileFragment_to_profileUpdateFragment);
-        navController.popBackStack();
+        //navController.popBackStack();
         });
 
     }
