@@ -65,6 +65,9 @@
             android:label="Home"
             tools:layout="@layout/fragment_posts">
 
+            <action
+                android:id="@+id/action_postsHomeFragment_to_postDetailFragment"
+                app:destination="@id/postDetailFragment" />
         </fragment>
         <fragment
             android:id="@+id/postsMyFragment"
@@ -72,12 +75,49 @@
             android:label="My posts"
             tools:layout="@layout/fragment_posts">
 
+            <!--"@+id/action_postsMyFragment_to_postDetailFragment"-->
+            <action
+
+                android:id="@+id/action_postsHomeFragment_to_postDetailFragment"
+                app:destination="@id/postDetailFragment" />
         </fragment>
         <fragment
             android:id="@+id/postsLikeFragment"
             android:name="com.example.firebasetemplate.PostsLikeFragment"
             android:label="Likes"
             tools:layout="@layout/fragment_posts">
+
+            <action
+                android:id="@+id/action_postsLikeFragment_to_postDetailFragment"
+                app:destination="@id/postDetailFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/postDetailFragment"
+            android:name="com.example.firebasetemplate.PostDetailFragment"
+            android:label="PostDetailFragment"
+            tools:layout="@layout/fragment_post_detail">
+            <argument
+                android:name="content"
+                app:argType="string"
+                app:nullable="true" />
+            <argument
+                android:name="authorName"
+                app:argType="string"
+                app:nullable="true" />
+            <argument
+                android:name="imageUrl"
+                app:argType="string"
+                app:nullable="true" />
+            <argument
+                android:name="authorPhoto"
+                app:argType="string" />
+            <argument
+                android:name="postId"
+                app:argType="string"
+                app:nullable="true" />
+
+
+
 
         </fragment>
     </navigation>

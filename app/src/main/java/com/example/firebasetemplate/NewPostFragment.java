@@ -53,7 +53,7 @@ public class NewPostFragment extends AppFragment {
                     .addOnSuccessListener(urlDescarga ->{
 
                         Post post = new Post();
-                        post.content = binding.contenido.getText().toString();
+                        post.content = binding.commentContent.getText().toString();
                         post.authorName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                         post.date = LocalDate.now().toString();
                         post.imageUrl = urlDescarga.toString();

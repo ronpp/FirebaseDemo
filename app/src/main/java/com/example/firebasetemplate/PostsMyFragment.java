@@ -8,4 +8,5 @@ public class PostsMyFragment extends PostsHomeFragment{
     Query setQuery(){
         return db.collection("posts").whereEqualTo("authorName", auth.getCurrentUser().getDisplayName());
     }
+
 }

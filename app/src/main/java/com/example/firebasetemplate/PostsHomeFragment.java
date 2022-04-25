@@ -66,10 +66,10 @@ public class PostsHomeFragment extends AppFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Post post = postsList.get(position);
-            holder.binding.contenido.setText(post.content);
-            holder.binding.autor.setText(post.authorName);
+            holder.binding.commentContent.setText(post.content);
+            holder.binding.author.setText(post.authorName);
             Glide.with(requireContext()).load(post.imageUrl).into(holder.binding.imagen);
-            Glide.with(requireContext()).load(post.authorPhoto).into(holder.binding.autorFoto);
+            Glide.with(requireContext()).load(post.authorPhoto).into(holder.binding.authorPhoto);
 
             holder.binding.favorito.setOnClickListener(v -> {
                 db.collection("posts").document(post.postid)
@@ -78,6 +78,10 @@ public class PostsHomeFragment extends AppFragment {
             });
 
             holder.binding.favorito.setChecked(post.likes.containsKey(auth.getUid()));
+            holder.binding.viewholderCard.setOnClickListener(v -> {
+                PostsHomeFragmentDirections.ActionPostsHomeFragmentToPostDetailFragment action = PostsHomeFragmentDirections.actionPostsHomeFragmentToPostDetailFragment(post.content, post.authorName, post.imageUrl, post.authorPhoto, post.postid);
+                navController.navigate(action);
+            });
 
         }
 
